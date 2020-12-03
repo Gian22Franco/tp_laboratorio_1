@@ -265,3 +265,139 @@ int afiches_setEstadoTxt(Afiches* this, char* estado)
 		return retornar;
 }
 
+
+/**
+ * \brief Funcion para imprimir todos los datos de una venta
+ * \void* this: Puntero a void que luego convertiremos en un tipo de dato Sale
+ * \return (-1) si algo salio mal (0) si todo esta OK
+ */
+int afiches_print(void* this)
+{
+	int retorno=-1;
+	Afiches* bufferAfiche;
+	int bufferIdCliente;
+	int bufferIdAfiche;
+	int bufferAfichesQty;
+	char bufferNombre[LONG_SIZE];
+	int bufferZona;
+	int bufferEstado;
+	char bufferZonaString[LONG_SIZE];
+	char bufferEstadoString[LONG_SIZE];
+	if(this!=NULL)
+	{
+		retorno=0;
+		bufferAfiche = (Afiches*) this;
+		if( !afiches_getClienteId(bufferAfiche, &bufferIdCliente) && !afiches_getAficheId(bufferAfiche, &bufferIdAfiche) && !afiches_getCantidadAfiches(bufferAfiche, &bufferAfichesQty) &&
+			!afiches_getNombreAfiche(bufferAfiche, bufferNombre) && !afiches_getZona(bufferAfiche, &bufferZona) && !afiches_getEstado(bufferAfiche, &bufferEstado))
+		{
+			switch(bufferZona)
+			{
+				case 1:
+					sprintf(bufferZonaString, "CABA");
+				break;
+				case 2:
+					sprintf(bufferZonaString, "ZONA SUR");
+				break;
+				case 3:
+					sprintf(bufferZonaString, "ZONA OESTE");
+				break;
+			}
+			if(bufferEstado)
+			{
+				sprintf(bufferEstadoString, "COBRADO");
+			}
+			else
+			{
+				sprintf(bufferEstadoString, "A COBRAR");
+			}
+			printf("\nID venta: %d - ID cliente: %d - Cantidad: %d - Nombre archivo: %s - Zona: %s - Estado: %s",
+					bufferIdAfiche, bufferIdCliente, bufferAfichesQty, bufferNombre, bufferZonaString, bufferEstadoString);
+		}
+	}
+	return retorno;
+}
+
+/**
+ * \brief Funcion para corroborar si una venta NO esta cobrada
+ * \void* this: Puntero a void que luego convertiremos en un tipo de dato Sale
+ * \return (-1) si algo salio mal (0) si todo esta OK
+ */
+int afiches_estaVendida(void* this)
+{
+	int retornar=-1;
+	Afiches* bufferAfiches;
+	int bufferEstado;
+	if(this!=NULL)
+	{
+		retornar=0;
+		bufferAfiches = (Afiches*) this;
+		if(!afiches_getEstado(bufferAfiches, &bufferEstado) && bufferEstado==0)
+		{
+			retornar=1;
+		}
+	}
+	return retornar;
+}
+
+/**
+ * \brief Funcion para corroborar si una venta ESTA cobrada
+ * \void* this: Puntero a void que luego convertiremos en un tipo de dato Sale
+ * \return (-1) si algo salio mal (0) si todo esta OK
+ */
+int afiches_noEstaVendida(void* this)
+{
+	int retornar=-1;
+	Afiches* bufferAfiches;
+	int bufferEstado;
+	if(this!=NULL)
+	{
+		retornar=1;
+		bufferAfiches = (Afiches*) this;
+		if(!afiches_getEstado(bufferAfiches, &bufferEstado) && bufferEstado==0)
+		{
+			retornar=0;
+		}
+	}
+	return retornar;
+}
+/**
+ * \brief Funcion para comparar id que recibimos por parametro y el id del cliente en una venta
+ * \void* this: Puntero a void que luego convertiremos en un tipo de dato Sale
+ * \void* id: Puntero a void que luego convertiremos en un int
+ * \return (-1) si algo salio mal (0) si todo esta OK
+ */
+int afiches_idCargado(void* this, void* id)
+{
+	int retornar=0;
+	int bufferClienteId;
+	int bufferId = (int) id;
+	int bufferEstado;
+	Afiches* bufferSale = (Afiches*) this;
+	if( !afiches_getClienteId(bufferSale, &bufferClienteId) && !afiches_getEstado(bufferSale, &bufferEstado))
+	{
+		if(bufferClienteId == bufferId && bufferEstado==1)
+		{
+			retornar=1;
+		}
+	}
+	return retornar;
+}
+
+int afiches_idNoCargado(void* this, void* id)
+{
+	int retornar=0;
+	int bufferClienteId;
+	int bufferId = (int) id;
+	int bufferEstado;
+	Afiches* bufferSale = (Afiches*) this;
+	if( !afiches_getClienteId(bufferSale, &bufferClienteId) && !afiches_getEstado(bufferSale, &bufferEstado))
+	{
+		if(bufferClienteId == bufferId && bufferEstado==0)
+		{
+			retornar=1;
+		}
+	}
+	return retornar;
+}
+
+

@@ -8,14 +8,17 @@
  ============================================================================
  */
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "LinkedList.h"
-#include "Cliente.h"
-#include "Afiches.h"
 #include "Controller.h"
+#include "Cliente.h"
+#include "Parser.h"
+#include "Afiches.h"
 #include "utn.h"
+#include "Estadisticas.h"
 
 int main(void) {
 	setbuf(stdout, NULL);

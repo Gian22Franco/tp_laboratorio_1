@@ -500,56 +500,66 @@ int ll_sort(LinkedList *this, int (*pFunc)(void*, void*), int order) {
 	return returnAux;
 }
 
-
-LinkedList* ll_map(LinkedList *this, void(*pFunc)(void*)) {// ver si va int o void en la pFunc
-
-	if (this != NULL && pFunc != NULL) {
-		for (int i = 0; i < ll_len(this); i++) {
-			pFunc(ll_get(this, i));
-		}
-
-	}
-	return this;
-}
-
-
-/*
-LinkedList* ll_filter(LinkedList *this, int (*pFunc)(void*)) {
-	LinkedList *filteredList = ll_newLinkedList();
-	if (this != NULL && pFunc != NULL && filteredList != NULL) {
-		void *aux;
-		for (int i = 0; i < ll_len(this); i++) {
-			aux = ll_get(this, i);
-			if(pFunc(aux)){
-				ll_add(filteredList, aux);
-			}
-		}
-	}
-	return filteredList;
-}
-
-
-LinkedList* ll_filter(LinkedList*this, int(*pFunc)(void))
+/** \brief Recorre toda la lista y por cada uno de los elementos de la misma llama a una funcion criterio
+ * \param pList LinkedList* Puntero a la lista
+ * \param pFunc (*pFunc) Puntero a la funcion criterio
+ * \return int Retorna  (-1) Error: si el puntero a la listas es NULL
+                                ( 0) Si ok
+ */
+int ll_map(LinkedList* this, int (*pFunc)(void*))
 {
-	int returnAux = -1;
+	int returnAux=-1;
 	int len = ll_len(this);
-	if(this != NULL && pFunc != NULL)
+	void *pElement=NULL;
+	if(this!=NULL)
 	{
-		for(int i; i < len; i++)
+		for(int i=0;i<len;i++)
 		{
-			if(pFunc(ll_get(this, i)) == 1)
+			pElement=ll_get(this, i);
+			if(pElement!=NULL && !pFunc(pElement))
 			{
-				ll_remove(this,i);
-				i--;
+				returnAux=0;
 			}
 		}
-		returnAux = 0;
 	}
 	return returnAux;
 }
 
-*/
 
+/** \brief Filtra a traves de una funcion criterio y devuelve una lista nueva
+ * \param pList LinkedList* Puntero a la lista
+ * \param pFunc (*pFunc) Puntero a la funcion criterio
+ * \return lista nueva y filtrada
+ */
+LinkedList* ll_cloneFilter(LinkedList* this, int (*pFunc)(void*))
+{
+	int len = ll_len(this);
+	LinkedList* auxList=NULL;
+	void* pElement=NULL;
+	if(this!=NULL && pFunc!=NULL)
+	{
+		auxList = ll_newLinkedList();
+		if(auxList!=NULL)
+		{
+			for(int i=0; i<len;i++)
+			{
+				pElement = ll_get(this, i);
+				if(pFunc(pElement))
+				{
+					ll_add(auxList, pElement);
+				}
+			}
+		}
+	}
+	return auxList;
+}
+
+/** \brief Filtra a traves de una funcion criterio y remueve los elementos que no la cumplan
+ * \param pList LinkedList* Puntero a la lista
+ * \param pFunc (*pFunc) Puntero a la funcion criterio
+ * \return int (-1) si la lista es NULL
+ * 			   (0) si Ok
+ */
 int ll_filter(LinkedList* this, int (*pFunc)(void*))
 {
 	int r=-1;
@@ -574,22 +584,31 @@ int ll_filter(LinkedList* this, int (*pFunc)(void*))
 	return r;
 }
 
-
-int ll_reduceInt(LinkedList* this,int (*pFunc)(void* pElement))
+/** \brief Recorre la lista y devuelve un acumulador INT con respecto a una funcion criterio
+ * \param pList LinkedList* Puntero a la lista
+ * \param pFunc (*pFunc) Puntero a la funcion criterio, recibe dos punteros a void
+ * \param int id : parametro a comparar, ID
+ * \param int* pResultado : Retornamos por referencia el acumulador INT
+ * \return int (-1) si la lista es NULL
+ * 			   (0) si Ok
+ */
+int ll_reduceInt(LinkedList* this, int (*pFunc)(void*, void*), int id,int* pResultado)
 {
-    int acumulador;
-    int i;
-    int len=ll_len(this);
-    Node* aux;
-    if(this!=NULL && pFunc!=NULL)
-    {
-        for(i=0;i<len;i++)
-        {
-        	aux=getNode(this,i);
-            acumulador=acumulador+pFunc(aux->pElement);
-        }
-    }
-    return acumulador;
+	int returnAux=-1;
+	int len = ll_len(this);
+	int acc=0;
+	void* pElement=NULL;
+	if(this!=NULL && pFunc!=NULL && len>-1)
+	{
+		for(int i=0;i<len;i++)
+		{
+			pElement = ll_get(this, i);
+			acc= acc + pFunc(pElement,(void*) id);
+		}
+		*pResultado = acc;
+		returnAux=0;
+	}
+	return returnAux;
 }
 
 

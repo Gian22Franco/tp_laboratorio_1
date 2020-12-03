@@ -49,6 +49,14 @@ int afiches_getEstado(Afiches* this, int* pResult);
 int afiches_setEstado(Afiches* this, int estado);
 int afiches_setEstadoTxt(Afiches* this, char* estado);
 
+int afiches_estaVendida(void* this);
+int afiches_noEstaVendida(void* this);
+
+int afiches_idCargado(void* this, void* id);
+int afiches_idNoCargado(void* this, void* id);
+
+int afiches_print(void* this);
+
 
 void afiches_delete();
 

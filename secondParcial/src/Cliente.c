@@ -163,35 +163,30 @@ int cliente_setCuit(Cliente* this, char* cuit)
 	return retorno;
 }
 
-
-Cliente* cliente_add()
+/**
+ * \brief Funcion para imprimir todos los datos de un cliente
+ * \void* this: Puntero a void que luego convertiremos en un tipo de dato Cliente
+ * \return (-1) si algo salio mal (0) si todo esta OK
+ */
+int cliente_print(void* this)
 {
-	char nAux[128];
-	char hAux[128];
-	char cuitAux[128];
-	Cliente* this = cliente_new();
-
-	if(this != NULL)
+	int retorno=-1;
+	Cliente* bufferClient;
+	int bufferId;
+	char bufferNombre[LONG_STRING];
+	char bufferApellido[LONG_STRING];
+	char bufferCuit[LONG_CUIT];
+	if(this!=NULL)
 	{
-		if(!utn_getNombre("Ingrese el nombre: ", "Nombre invalido, reintente.\n", nAux,3, 128))
+		retorno=0;
+		bufferClient = (Cliente*) this;
+		if( !cliente_getId(bufferClient, &bufferId) && !cliente_getNombre(bufferClient, bufferNombre) &&
+			!cliente_getApellido(bufferClient, bufferApellido) && !cliente_getCuit(bufferClient, bufferCuit))
 		{
-			if(!utn_getNombre("Ingrese el apellido: ", "Nombre invalido, reintente.\n", hAux,3, 128))
-			{
-				if(!utn_getCuit("Ingrese el cuit del nuevo cliente: ", "\nERROR!", cuitAux, 2, LONG_CUIT))
-				{
-					cliente_setNombre(this, nAux);
-					cliente_setApellido(this, hAux);
-					cliente_setCuit(this, cuitAux);
-				}
-			}
+			printf("\nID: %d - Nombre: %s - Apellido: %s - Cuit: %s", bufferId, bufferNombre, bufferApellido, bufferCuit);
 		}
-	}else{
-		printf("new NULL.\n");
 	}
-
-
-
-	return this;
+	return retorno;
 }
 
 

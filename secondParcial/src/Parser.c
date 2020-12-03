@@ -14,14 +14,14 @@
 #include "Parser.h"
 #define BUFFER 4096
 
-/** \brief Parsea los datos los datos de los empleados desde el archivo data.csv (modo texto).
+/** \brief Parsea los datos los datos de los clientes desde el archivo data.csv (modo texto).
  *
  * \param path char*: Direccion del archivo
  * \param pArrayListEmployee LinkedList*: Puntero a la LinkedList
  * \return (-1) Si algo salio mal o (0) si todo esta bien
  *
  */
-int parser_clientFromText(FILE* pFile , LinkedList* clientList)
+int parser_clientFromText(FILE* pFile , LinkedList* ListaCliente)
 {
 	int retornar=-1;
 	char bufferId[BUFFER];
@@ -29,14 +29,14 @@ int parser_clientFromText(FILE* pFile , LinkedList* clientList)
 	char bufferLastName[BUFFER];
 	char bufferCuit[BUFFER];
 	Cliente* bufferCliente;
-	if(pFile!=NULL && clientList!=NULL)
+	if(pFile!=NULL && ListaCliente!=NULL)
 	{
 		do
 		{
 			if(fscanf(pFile, "%[^,],%[^,],%[^,],%[^\n]\n",bufferId,bufferName,bufferLastName,bufferCuit)==4)
 			{
 				bufferCliente = cliente_newWithParametersTxt(bufferId, bufferName, bufferLastName, bufferCuit);
-				ll_add(clientList, bufferCliente);
+				ll_add(ListaCliente, bufferCliente);
 				retornar=0;
 			}
 			else
@@ -47,8 +47,14 @@ int parser_clientFromText(FILE* pFile , LinkedList* clientList)
 	}
     return retornar;
 }
-
-int parser_afichesFromText(FILE* pFile , LinkedList* sellList)
+/** \brief Parsea los datos de las ventas desde un archivo(modo texto).
+ *
+ * \param pFile FILE*: Direccion del archivo
+ * \param sellList LinkedList*: Puntero a la LinkedList
+ * \return (-1) Si algo salio mal o (0) si todo esta bien
+ *
+ */
+int parser_afichesFromText(FILE* pFile , LinkedList* ListaAfiches)
 {
 	int retornar=-1;
 	char bufferIdSell[BUFFER];
@@ -58,14 +64,14 @@ int parser_afichesFromText(FILE* pFile , LinkedList* sellList)
 	char bufferZone[BUFFER];
 	char bufferState[BUFFER];
 	Afiches* bufferAfiches;
-	if(pFile!=NULL && sellList!=NULL)
+	if(pFile!=NULL && ListaAfiches!=NULL)
 	{
 		do
 		{
 			if(fscanf(pFile, "%[^,],%[^,],%[^,],%[^,],%[^,],%[^\n]\n",bufferIdSell, bufferIdClient,bufferPosterQty,bufferFileName,bufferZone, bufferState)==6)
 			{
 				bufferAfiches = afiches_newWithParametersTxt(bufferIdClient, bufferIdSell, bufferPosterQty, bufferFileName, bufferZone, bufferState);
-				ll_add(sellList, bufferAfiches);
+				ll_add(ListaAfiches, bufferAfiches);
 				retornar=0;
 			}
 			else

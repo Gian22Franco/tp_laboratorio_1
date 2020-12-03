@@ -38,6 +38,7 @@ int cliente_setCuit(Cliente* this, char* cuit);
 
 int cliente_print(void* this);
 
+
 void cliente_delete();
 
 #endif /* CLIENTE_H_ */
